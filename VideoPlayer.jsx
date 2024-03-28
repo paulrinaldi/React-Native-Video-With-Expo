@@ -6,9 +6,6 @@ import Video, { TextTrackType } from 'react-native-video';
 // "background.mp4" in your project. You can include multiple videos
 // on a single screen if you like.
 
-const toOption = (textTrack) => {
-  return textTrack ? { type: textTrack.title ? 'title' : 'language', value: textTrack.title ? textTrack.title : textTrack.language } : undefined;
-};
 const textTracks = [
   {
     title: "English CC",
@@ -22,13 +19,15 @@ const textTracks = [
     type: TextTrackType.SRT, // "application/x-subrip"
     uri: "https://durian.blender.org/wp-content/content/subtitles/sintel_es.srt"
   }
-] 
+];
+const videoURL = 'https://democracynow.cachefly.net/democracynow/360/dn2024-0105.mp4';
+const toTextTrackSelectOption = (textTrack) => {
+  return textTrack ? { type: textTrack.title ? 'title' : 'language', value: textTrack.title ? textTrack.title : textTrack.language } : undefined;
+};
 
 const VideoPlayer = () => {
   const videoRef = useRef(null);
-  const defaultValue = toOption(textTracks[0]);
-  console.log('defaultValue', defaultValue);
-  const [selected, setSelected] = useState(defaultValue);
+  const [selected, setSelected] = useState(textTracks[0]);
 
   // useEffect(() => {
   //   setTimeout(() => {
@@ -41,25 +40,27 @@ const VideoPlayer = () => {
   //     });
   //   }, 4000);
   // }, [])
+
+  console.log('selected', selected);
   
   return (
-    <Video 
-      // textTracks={textTracks}
+    <Video
+      textTracks={textTracks}
       // Can be a URL or a local file.
       source={{ uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' }}
       // Store reference
       // ref={videoRef}
-      // onTextTracks={(data) => {
-      //   const s = data.textTracks?.find((xTextTrack) => {
-      //     return xTextTrack?.selected;
-      //   });
-      //   console.log('onTextTracks');
-      //   console.log('selectedTrack', s);
-      //   console.log('selected', selected);
+      onTextTracks={(data) => {
+        const s = data.textTracks?.find((xTextTrack) => {
+          return xTextTrack?.selected;
+        });
+        console.log('onTextTracks');
+        console.log('s', s);
+        console.log('selected', selected);
 
-      //   // setSelected(toOption(s));
-      // }}
-      // selectedTextTrack={toOption(selected)}
+        setSelected(s);
+      }}
+      selectedTextTrack={toTextTrackSelectOption(selected)}
       style={styles.backgroundVideo}
       controls={true}
       // resizeMode="contain"
