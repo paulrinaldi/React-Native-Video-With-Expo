@@ -62,7 +62,12 @@ const VideoPlayer = () => {
       // selectedTextTrack={toOption(selected)}
       style={styles.backgroundVideo}
       controls={true}
+      disableFocus={false} // bc false, do NOT Let background audio/music from other apps play (android only) when your media is playing -> // works well e.g. have youtube playing, then play this app, youtube will pause
+      playWhenInactive={true} // on iOS, Continue playing the media when notif controls or control center modals are above the app -> // have not tested yet
+      ignoreSilentSwitch={'ignore'}
+      playInBackground // (Android and iOS) -> works on Android but not on iOS when backgrounded
       // resizeMode="contain"
+      onAudioFocusChanged={(event) => console.log('onAudioFocusChanged', event, event.hasAudioFocus)}
     />
   )
 }
